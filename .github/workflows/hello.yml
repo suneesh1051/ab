@@ -1,0 +1,21 @@
+name: Hello Workflow
+
+on: push
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello
+        run: echo "Hello, World!" 
+
+      - name: Say Goodbye
+        run: echo "Goodbye, World!"
+
+      - name: Show facts about this run
+        run: |
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Branch: $GITHUB_REF"
+          echo "Commit: $GITHUB_SHA"
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Event Name: $GITHUB_EVENT_NAME"
