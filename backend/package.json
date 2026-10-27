@@ -1,0 +1,13 @@
+{
+  "name": "class-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tiny backend for the pipeline class",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

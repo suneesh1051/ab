@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pipeline Class Demo</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 480px; margin: 48px auto; padding: 0 16px; }
+      input, button { font-size: 16px; padding: 8px 12px; }
+      #answer { margin-top: 24px; font-size: 22px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h1>Pipeline Class Demo</h1>
+    <p>Type your name and ask the backend to say hello.</p>
+    <input id="name" placeholder="Your name" />
+    <button id="go">Say hello</button>
+    <div id="answer"></div>
+
+    <script src="src/greeting.js"></script>
+    <script>
+      // Same server in the cloud later; localhost:4000 when running locally.
+      const API_BASE = location.hostname === "localhost" || location.protocol === "file:"
+        ? "http://localhost:4000"
+        : "";
+
+      document.getElementById("go").addEventListener("click", async () => {
+        const name = document.getElementById("name").value;
+        const answer = document.getElementById("answer");
+        try {
+          const res = await fetch(helloUrl(API_BASE, name));
+          answer.textContent = (await res.json()).message;
+        } catch {
+          answer.textContent = "Could not reach the backend. Is it running?";
+        }
+      });
+    </script>
+  </body>
+</html>

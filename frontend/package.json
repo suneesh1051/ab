@@ -1,0 +1,13 @@
+{
+  "name": "class-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tiny web page for the pipeline class",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
