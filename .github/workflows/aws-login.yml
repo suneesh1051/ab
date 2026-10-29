@@ -1,0 +1,27 @@
+name: aws-login
+
+
+on: 
+  push:
+    branches:
+      - develop
+
+
+jobs:
+  show-settings:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Print a variable
+        run: echo "Class name is ${{ vars.CLASS_NAME }}"
+
+
+      - name: Try to print a secret
+        run: echo "My secret is ${{ secrets.MY_SECRET }}"
+
+
+      - name: Use a secret without printing it
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+        run: echo "The secret has ${#MY_SECRET} characters"
