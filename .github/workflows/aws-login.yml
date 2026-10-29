@@ -1,27 +1,44 @@
-name: aws-login
+name: AWS login check
 
 
-on: 
+on:
+  workflow_dispatch:
   push:
-    branches:
-      - develop
+    branches: [develop]
+
+
+permissions:
+  id-token: write   # lets the job ask GitHub for an OIDC token
+  contents: read
 
 
 jobs:
-  show-settings:
+  who-am-i:
     runs-on: ubuntu-latest
 
 
     steps:
-      - name: Print a variable
-        run: echo "Class name is ${{ vars.CLASS_NAME }}"
+      # Prints what GitHub's token says (not the token itself),
+      # so it can be compared with the role's trust policy.
+      - name: Show my GitHub token's claims (debug)
+        run: |
+          TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r .value)
+          P=$(echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+')
+          while [ $(( ${#P} % 4 )) -ne 0 ]; do P="$P="; done
+          echo "$P" | base64 -d | jq '{sub, aud, iss}'
 
 
-      - name: Try to print a secret
-        run: echo "My secret is ${{ secrets.MY_SECRET }}"
+      - name: Log in to AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
 
-      - name: Use a secret without printing it
-        env:
-          MY_SECRET: ${{ secrets.MY_SECRET }}
-        run: echo "The secret has ${#MY_SECRET} characters"
+      - name: Who am I?
+        run: aws sts get-caller-identity
+
+
+      - name: Which region?
+        run: echo "Working in $AWS_REGION"
